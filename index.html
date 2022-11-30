@@ -37,9 +37,11 @@
                   z.toFixed(2) +
                   "(m/s^2)<br />";
               });
+            } else {
+              alert("DeviceMotionEvent.requestPermission is not found");
             }
           })
-          .catch(console.error);
+          .catch(alert("エラー"));
       } else {
         alert("DeviceMotionEvent.requestPermission is not found");
       }
@@ -48,7 +50,7 @@
   <body>
     <div id="result_acc"></div>
     <br />
-    test2
+    test3
     <div id="result_gyro"></div>
   </body>
 </html>
