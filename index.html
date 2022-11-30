@@ -13,11 +13,12 @@
           .then((permissionState) => {
             if (permissionState === "granted") {
               window.addEventListener("devicemotion", (event) => {
+                alert(event.accelerationIncludingGravity.x);
+
                 if (!event.accelerationIncludingGravity) {
                   alert("event.accelerationIncludingGravity is null");
                   return;
                 }
-                console.log(event.accelerationIncludingGravity.x);
                 console.log(event.accelerationIncludingGravity.y);
                 console.log(event.accelerationIncludingGravity.z);
                 var x = event.accelerationIncludingGravity.x;
