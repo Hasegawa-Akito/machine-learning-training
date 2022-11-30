@@ -8,35 +8,38 @@
   maximum-scale=1.0, user-scalable=no"
     />
     <script type="text/javascript">
-      if (DeviceMotionEvent.requestPermission) {
+      if (
+        window.DeviceMotionEvent &&
+        window.DeviceMotionEvent.requestPermission
+      ) {
         DeviceMotionEvent.requestPermission()
           .then((permissionState) => {
             if (permissionState === "granted") {
               window.addEventListener("devicemotion", (event) => {
                 alert(event.accelerationIncludingGravity.x);
 
-                if (!event.accelerationIncludingGravity) {
-                  alert("event.accelerationIncludingGravity is null");
-                  return;
-                }
-                console.log(event.accelerationIncludingGravity.y);
-                console.log(event.accelerationIncludingGravity.z);
-                var x = event.accelerationIncludingGravity.x;
-                var y = event.accelerationIncludingGravity.y;
-                var z = event.accelerationIncludingGravity.z;
+                // if (!event.accelerationIncludingGravity) {
+                //   alert("event.accelerationIncludingGravity is null");
+                //   return;
+                // }
+                // console.log(event.accelerationIncludingGravity.y);
+                // console.log(event.accelerationIncludingGravity.z);
+                // var x = event.accelerationIncludingGravity.x;
+                // var y = event.accelerationIncludingGravity.y;
+                // var z = event.accelerationIncludingGravity.z;
 
-                var result1 = document.getElementById("result_acc");
-                result1.innerHTML =
-                  "重力加速度<br />" +
-                  "X：" +
-                  x.toFixed(2) +
-                  "(m/s^2)<br />" +
-                  "Y：" +
-                  y.toFixed(2) +
-                  "(m/s^2)<br />" +
-                  "Z：" +
-                  z.toFixed(2) +
-                  "(m/s^2)<br />";
+                // var result1 = document.getElementById("result_acc");
+                // result1.innerHTML =
+                //   "重力加速度<br />" +
+                //   "X：" +
+                //   x.toFixed(2) +
+                //   "(m/s^2)<br />" +
+                //   "Y：" +
+                //   y.toFixed(2) +
+                //   "(m/s^2)<br />" +
+                //   "Z：" +
+                //   z.toFixed(2) +
+                //   "(m/s^2)<br />";
               });
             } else {
               alert("DeviceMotionEvent.requestPermission is not found");
@@ -51,7 +54,7 @@
   <body>
     <div id="result_acc"></div>
     <br />
-    test3
+    test4
     <div id="result_gyro"></div>
   </body>
 </html>
