@@ -14,6 +14,7 @@
       ) {
         DeviceMotionEvent.requestPermission()
           .then((permissionState) => {
+            alert("aa");
             if (permissionState === "granted") {
               window.addEventListener("devicemotion", (event) => {
                 alert(event.accelerationIncludingGravity.x);
