@@ -10,11 +10,9 @@
     <script>
       function post_function(result_string) {
         if (result_string === "granted") {
-          alert("ok");
-          // ユーザが許可した場合、文字列"granted"が返る
+          console.log("ok");
         } else if (result_string === "denied") {
-          alert("許否");
-          // ユーザが拒否した場合、文字列"denied"が返る
+          alert("加速度センサーを使用できません");
         }
       }
       function permission_request() {
@@ -23,16 +21,13 @@
           DeviceOrientationEvent.requestPermission &&
           typeof DeviceOrientationEvent.requestPermission === "function"
         ) {
-          DeviceMotionEvent.requestPermission()
-            .then(post_function)
-            .catch(alert("エラー"));
+          DeviceMotionEvent.requestPermission().then(post_function);
           window.addEventListener(
             "devicemotion",
             function (event) {
               var x = event.accelerationIncludingGravity.x;
               var y = event.accelerationIncludingGravity.y;
               var z = event.accelerationIncludingGravity.z;
-              alert(x);
 
               var result1 = document.getElementById("result_acc");
               result1.innerHTML =
@@ -56,10 +51,10 @@
     </script>
   </head>
   <body>
-    <button onclick="permission_request();">動作と方向へのアクセス許可</button>
+    <button onclick="permission_request();">スタート</button>
     <div id="result_acc"></div>
     <br />
-    test4
+    test5
     <div id="result_gyro"></div>
   </body>
 </html>
