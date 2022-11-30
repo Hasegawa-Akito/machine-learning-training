@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <script>
+    function handleButton() {
+      const filename = "テスト.csv";
+      const data_text = "1, 2, 3";
+      exportCSV(filename, data_text);
+    }
+
+    function exportCSV(filename, data_text) {
+      event.preventDefault();
+      const blob = new Blob([data_text], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      document.body.appendChild(a);
+      a.download = filename;
+      a.href = url;
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+  <body>
+    <button onclick="handleButton();">csv download</button>
+  </body>
+</html>
