@@ -7,52 +7,56 @@
       content="width=device-width, initial-scale=1.0, 
   maximum-scale=1.0, user-scalable=no"
     />
-    <script type="text/javascript">
-      if (
-        window.DeviceMotionEvent &&
-        window.DeviceMotionEvent.requestPermission
-      ) {
-        DeviceMotionEvent.requestPermission()
-          .then((permissionState) => {
-            alert("aa");
-            if (permissionState === "granted") {
-              window.addEventListener("devicemotion", (event) => {
-                alert(event.accelerationIncludingGravity.x);
+    <script>
+      function post_function(result_string) {
+        if (result_string === "granted") {
+          alert("ok");
+          // ユーザが許可した場合、文字列"granted"が返る
+        } else if (result_string === "denied") {
+          alert("許否");
+          // ユーザが拒否した場合、文字列"denied"が返る
+        }
+      }
+      function permission_request() {
+        if (
+          DeviceOrientationEvent &&
+          DeviceOrientationEvent.requestPermission &&
+          typeof DeviceOrientationEvent.requestPermission === "function"
+        ) {
+          DeviceMotionEvent.requestPermission()
+            .then(post_function)
+            .catch(alert("エラー"));
+          window.addEventListener(
+            "devicemotion",
+            function (event) {
+              var x = event.accelerationIncludingGravity.x;
+              var y = event.accelerationIncludingGravity.y;
+              var z = event.accelerationIncludingGravity.z;
+              alert(x);
 
-                // if (!event.accelerationIncludingGravity) {
-                //   alert("event.accelerationIncludingGravity is null");
-                //   return;
-                // }
-                // console.log(event.accelerationIncludingGravity.y);
-                // console.log(event.accelerationIncludingGravity.z);
-                // var x = event.accelerationIncludingGravity.x;
-                // var y = event.accelerationIncludingGravity.y;
-                // var z = event.accelerationIncludingGravity.z;
-
-                // var result1 = document.getElementById("result_acc");
-                // result1.innerHTML =
-                //   "重力加速度<br />" +
-                //   "X：" +
-                //   x.toFixed(2) +
-                //   "(m/s^2)<br />" +
-                //   "Y：" +
-                //   y.toFixed(2) +
-                //   "(m/s^2)<br />" +
-                //   "Z：" +
-                //   z.toFixed(2) +
-                //   "(m/s^2)<br />";
-              });
-            } else {
-              alert("DeviceMotionEvent.requestPermission is not found");
-            }
-          })
-          .catch(alert("エラー"));
-      } else {
-        alert("DeviceMotionEvent.requestPermission is not found");
+              var result1 = document.getElementById("result_acc");
+              result1.innerHTML =
+                "重力加速度<br />" +
+                "X：" +
+                x.toFixed(2) +
+                "(m/s^2)<br />" +
+                "Y：" +
+                y.toFixed(2) +
+                "(m/s^2)<br />" +
+                "Z：" +
+                z.toFixed(2) +
+                "(m/s^2)<br />";
+            },
+            false
+          );
+        } else {
+          alert("no");
+        }
       }
     </script>
   </head>
   <body>
+    <button onclick="permission_request();">動作と方向へのアクセス許可</button>
     <div id="result_acc"></div>
     <br />
     test4
