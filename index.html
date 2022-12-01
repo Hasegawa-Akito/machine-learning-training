@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, 
+  maximum-scale=1.0, user-scalable=no"
+    />
+    <script>
+      let data_text = "";
+
+      function post_function(result_string) {
+        if (result_string === "granted") {
+          console.log("ok");
+        } else if (result_string === "denied") {
+          alert("加速度センサーを使用できません");
+        }
+      }
+      function permission_request() {
+        if (
+          DeviceOrientationEvent &&
+          DeviceOrientationEvent.requestPermission &&
+          typeof DeviceOrientationEvent.requestPermission === "function"
+        ) {
+          DeviceMotionEvent.requestPermission().then(post_function);
+          window.addEventListener(
+            "devicemotion",
+            function (event) {
+              var x = event.accelerationIncludingGravity.x;
+              var y = event.accelerationIncludingGravity.y;
+              var z = event.accelerationIncludingGravity.z;
+
+              var result1 = document.getElementById("result_acc");
+              result1.innerHTML =
+                "重力加速度<br />" +
+                "X：" +
+                x.toFixed(4) +
+                "(m/s^2)<br />" +
+                "Y：" +
+                y.toFixed(4) +
+                "(m/s^2)<br />" +
+                "Z：" +
+                z.toFixed(4) +
+                "(m/s^2)<br />";
+
+              data_text +=
+                x.toFixed(4) + "," + y.toFixed(4) + z.toFixed(4) + "\n";
+            },
+            false
+          );
+        } else {
+          alert("no");
+        }
+      }
+
+      function exportCSV() {
+        const filename = document.getElementById("moveType").value;
+        event.preventDefault();
+        const blob = new Blob([data_text], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        document.body.appendChild(a);
+        a.download = filename;
+        a.href = url;
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      }
+    </script>
+  </head>
+  <body>
+    <select id="moveType">
+      <option value="腹筋">腹筋</option>
+      <option value="腕立て">腕立て</option>
+      <option value="スクワット">スクワット</option>
+    </select>
+
+    <button onclick="permission_request();">スタート</button>
+    <button onclick="exportCSV();">ストップ</button>
+
+    <div id="result_acc"></div>
+    <br />
+    test6
+    <div id="result_gyro"></div>
+  </body>
+</html>
