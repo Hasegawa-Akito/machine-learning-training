@@ -17,10 +17,12 @@
       }
       //計算実行時の処理
       async function predict(data) {
+        alert("1");
         //読み込んだパラメータをモデルに読み込ませるためテンソルに入力
         const b = tf.tensor(data);
         //モデルと使った予測
         var prediction = model.predict(b).dataSync();
+        alert("2");
         return prediction;
       }
 
