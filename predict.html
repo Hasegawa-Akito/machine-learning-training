@@ -1,37 +1,135 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.5"
-    ></script>
-    <title>Document</title>
-  </head>
-  <script>
-    window.onload = function () {
-      load_model();
-    };
-    //作成したモデルからモデルを読みこむ(await非同期処理？がミソらしいです)
-    async function load_model() {
-      model = await tf.loadModel("./tfjs_model/model.json");
-    }
-    //計算実行時の処理
-    async function Cal1() {
-      model = await tf.loadModel("./model.json");
-      //読み込んだパラメータをモデルに読み込ませるためテンソルに入力
-      const b = tf.tensor([
-        [-0.12223, 7.628188, -2.082138, 4.31463763, 5.5393372, 5.92373991],
-      ]);
-      //モデルと使った予測
-      var prediction = model.predict(b).dataSync();
-      console.log(prediction);
-    }
-  </script>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, 
+  maximum-scale=1.0, user-scalable=no"
+    />
+    <script>
+      window.onload = function () {
+        load_model();
+      };
+      //作成したモデルからモデルを読みこむ(await非同期処理？がミソらしいです)
+      async function load_model(data) {
+        model = await tf.loadModel("./tfjs_model/model.json");
+      }
+      //計算実行時の処理
+      async function predict() {
+        //読み込んだパラメータをモデルに読み込ませるためテンソルに入力
+        const b = tf.tensor(data);
+        //モデルと使った予測
+        var prediction = model.predict(b).dataSync();
+        return prediction;
+      }
 
+      let predict_data_x = [];
+      let predict_data_y = [];
+      let predict_data_z = [];
+      let predict_data_count = 0;
+
+      function average(data) {
+        let sum = 0;
+        for (i = 0; i < data.length; i++) {
+          sum = sum + data[i];
+        }
+        return sum / data.length;
+      }
+      function variance(data) {
+        // 平均値を求める
+        const ave = average(data);
+
+        //分散 ＝（（データ－平均値）の２乗）の総和 ÷ 個数
+        let varia = 0;
+        for (i = 0; i < data.length; i++) {
+          varia = varia + Math.pow(data[i] - ave, 2);
+        }
+        return varia / data.length;
+      }
+
+      //★標準偏差値
+      function standard_deviatio(data) {
+        //分散を求める
+        const varia = variance(data);
+
+        //分散の平方根
+        return Math.sqrt(varia);
+      }
+
+      function post_function(result_string) {
+        if (result_string === "granted") {
+          console.log("ok");
+        } else if (result_string === "denied") {
+          alert("加速度センサーを使用できません");
+        }
+      }
+      function permission_request() {
+        if (
+          DeviceOrientationEvent &&
+          DeviceOrientationEvent.requestPermission &&
+          typeof DeviceOrientationEvent.requestPermission === "function"
+        ) {
+          DeviceMotionEvent.requestPermission().then(post_function);
+          window.addEventListener(
+            "devicemotion",
+            function (event) {
+              var x = event.accelerationIncludingGravity.x;
+              var y = event.accelerationIncludingGravity.y;
+              var z = event.accelerationIncludingGravity.z;
+
+              predict_data_x[predict_data_count] = x;
+              predict_data_y[predict_data_count] = y;
+              predict_data_z[predict_data_count] = z;
+              predict_data_count++;
+
+              let ans = "";
+              if (predict_data_count >= 50) {
+                predict_data_count = 0;
+                mean_x = average(predict_data_x);
+                mean_y = average(predict_data_y);
+                mean_z = average(predict_data_z);
+                std_x = standard_deviation(predict_data_x);
+                std_y = standard_deviation(predict_data_y);
+                std_z = standard_deviation(predict_data_z);
+                ans = predict()[0];
+                var result1 = document.getElementById("result_acc");
+                result1.innerHTML = String(ans);
+              }
+
+              //   var result1 = document.getElementById("result_acc");
+              //   result1.innerHTML =
+              //     "重力加速度<br />" +
+              //     "X：" +
+              //     x.toFixed(4) +
+              //     "(m/s^2)<br />" +
+              //     "Y：" +
+              //     y.toFixed(4) +
+              //     "(m/s^2)<br />" +
+              //     "Z：" +
+              //     z.toFixed(4) +
+              //     "(m/s^2)<br />";
+            },
+            false
+          );
+        } else {
+          alert("no");
+        }
+      }
+    </script>
+  </head>
   <body>
-    <button onclick="Cal1();">予測</button>
+    <select id="moveType">
+      <option value="腹筋">腹筋</option>
+      <option value="腕立て">腕立て</option>
+      <option value="スクワット">スクワット</option>
+    </select>
+
+    <button onclick="permission_request();">スタート</button>
+
+    <div id="result_acc"></div>
+    <br />
+    predict1
+    <div id="result_gyro"></div>
   </body>
 </html>

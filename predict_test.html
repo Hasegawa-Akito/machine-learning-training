@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.5"
+    ></script>
+    <title>Document</title>
+  </head>
+  <script>
+    window.onload = function () {
+      load_model();
+    };
+    //作成したモデルからモデルを読みこむ(await非同期処理？がミソらしいです)
+    async function load_model() {
+      model = await tf.loadModel("./tfjs_model/model.json");
+    }
+    //計算実行時の処理
+    async function Cal1() {
+      //読み込んだパラメータをモデルに読み込ませるためテンソルに入力
+      const b = tf.tensor([
+        [-0.12223, 7.628188, -2.082138, 4.31463763, 5.5393372, 5.92373991],
+      ]);
+      //モデルと使った予測
+      var prediction = model.predict(b).dataSync();
+      console.log(prediction);
+    }
+  </script>
+
+  <body>
+    <button onclick="Cal1();">予測1</button>
+  </body>
+</html>
