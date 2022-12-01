@@ -16,7 +16,7 @@
     };
     //作成したモデルからモデルを読みこむ(await非同期処理？がミソらしいです)
     async function load_model() {
-      model = await tf.loadModel("./model.json");
+      model = await tf.loadModel("./tfjs_model/model.json");
     }
     //計算実行時の処理
     async function Cal1() {
